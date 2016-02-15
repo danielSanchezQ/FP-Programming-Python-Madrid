@@ -17,8 +17,11 @@ def genRange(fromN = 0, toN = -1):
             raise StopIteration
 
 #Haskell take 5 [1..] -> [1,2,3,4,5]
-def take(n, gen):
-    _, it = tee(gen)
+def take(n, gen, consume = False):
+    if not consume:
+        _, it = tee(gen)
+    else:
+        it = gen
     for _ in range(n):
         yield next(it)
 
@@ -28,7 +31,16 @@ def zipWith(f, *args):
 # def zipWith(f, it1, it2):
 #     return (x for x in map(f, zip(it1, it2))
 
-#Memoization
+#Memoization c
+
+def fibogen():
+    a,b = 1,1
+    yield a
+    yield b
+    while True:
+        res = a+b
+        a, b = b, res
+        yield res
 
 def autoStart(funct):
     @wraps(funct)
@@ -40,37 +52,31 @@ def autoStart(funct):
 
 @autoStart
 def fiboSeq():
-    seq     = [1,1]
-    size    = 2
+    gen     = fibogen()
+    seq     = []
+    size    = 0
     while True:
         required = (yield)
-        if required  > size:
-            while size < required+1:
-                a, b = seq[size-2], seq[size-1]
-                seq.append(a+b)
-                size += 1
+        if required  >= size:
+            gap = required - size
+            seq.extend(take(gap+1, gen, consume=True))
+            size += gap
         yield seq[required]
 
-fiboseq = fiboSeq()
-
-def fibo(n):
-    val = fiboseq.send(n)
-    next(fiboseq)
+def GenSendGet(v, gen):
+    val = fiboseq.send(v)
+    next(gen)
     return val
 
-def fibonacci():
-    n = 0
-    while True:
-        val = fiboseq.send(n)
-        next(fiboseq)
-        yield val
-        n += 1
 
 
 if __name__ == "__main__":
+    fiboseq = fiboSeq()
     print(list(genRange(toN=10)))
-    print(fibo(1))
-    print(fibo(10))
-    print(list(fibo(x) for x in range(10)))
-    fibonacciSeq = fibonacci()
-    print(list(take(10, fibonacciSeq)))
+    print(GenSendGet(0, fiboseq))
+    print(GenSendGet(1, fiboseq))
+    print(GenSendGet(2, fiboseq))
+    print(GenSendGet(10, fiboseq))
+    fibonnacci = fibogen()
+    print(list(take(10, fibonnacci, consume=True)))
+    print(list(zipWith(add, take(10, fibonnacci), take(10, fibonnacci))))
