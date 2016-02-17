@@ -1,5 +1,5 @@
 from operator import add
-from itertools import tee
+from itertools import tee, takewhile
 from functools import wraps
 
 
@@ -80,3 +80,4 @@ if __name__ == "__main__":
     fibonnacci = fibogen()
     print(list(take(10, fibonnacci, consume=True)))
     print(list(zipWith(add, take(10, fibonnacci), take(10, fibonnacci))))
+    print(list(takewhile(lambda x: x < 10000, zipWith(add, fibogen(), fibogen()))))

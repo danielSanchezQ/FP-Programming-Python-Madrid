@@ -20,7 +20,6 @@ def iterativeSqrt():
         res.append(math.sqrt(i))
     return res
 
-
 def fpSqrt():
     return list(map(math.sqrt, range(1, 1000)))
 
