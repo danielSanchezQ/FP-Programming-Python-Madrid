@@ -2,20 +2,7 @@ from functools import partial, reduce
 from operator import add, mul, mod
 
 
-# HASKELL STYLE: operateWith2 = (+) 2 . (*) 2
-#Fucnion normal
-def f(x,y):
-    return x, y
 
-#Curryed funtion
-def fc(x):
-    return lambda y: (x, y)
-
-f(10,10) == fc(10)(10)
-
-#Partioal application
-fuc = fc(5)
-fuc(10) == fc(10)(10)
 
 #Python partial
 add2 = partial(add, 2)
@@ -58,3 +45,6 @@ print(operateWith2(10, 3))
 #Primer ejemplo
 ff = comp(f1, f2, f3)
 print(list(map(ff, l)))
+
+if __name__ == "__main__":
+    pass
