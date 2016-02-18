@@ -8,6 +8,8 @@ myFilter = lambda cond, l : reduce(lambda x, y: x+[y] if cond(y) else x, l, [])
 
 
 
+
+
 if __name__ == "__main__":
     l = range(10)
     map_res   = map(lambda x: x*x, l)
@@ -17,3 +19,11 @@ if __name__ == "__main__":
     filter_res   = filter(lambda x: x%7, l2)
     myfilter_res = myFilter(lambda x: x%7, l2)
     print(list(filter_res) == list(myfilter_res))
+
+    #Reduce hacking
+    reslst = []
+    def modL(_, val):
+        global reslst
+        reslst.append(val*val)
+        return reslst
+    print(reduce(modL, l, []))
