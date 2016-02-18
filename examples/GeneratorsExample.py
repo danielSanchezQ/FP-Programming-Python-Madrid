@@ -68,16 +68,19 @@ def GenSendGet(v, gen):
     next(gen)
     return val
 
-
-
 if __name__ == "__main__":
     fiboseq = fiboSeq()
+    print("Custom Range, puede ser infinito...")
     print(list(genRange(toN=10)))
+    print("Llamadas a nuestro generador de fibonnacci con memoizacion")
     print(GenSendGet(0, fiboseq))
     print(GenSendGet(1, fiboseq))
     print(GenSendGet(2, fiboseq))
     print(GenSendGet(10, fiboseq))
     fibonnacci = fibogen()
+    print("Coger 10 elementos de un generador de fibonacci y consumirlos (10)")
     print(list(take(10, fibonnacci, consume=True)))
+    print("Sumar por pares los siguientes 10 numeros de la secuencia sin consumir esta")
     print(list(zipWith(add, take(10, fibonnacci), take(10, fibonnacci))))
-    print(list(takewhile(lambda x: x < 10000, zipWith(add, fibogen(), fibogen()))))
+    print("Sumar por pares de la secuencia de fibonacci hasta que estos sean mayores de 10000")
+    print(list(takewhile(lambda x: x < 10000, zipWith(add, *tee(fibogen())))))
