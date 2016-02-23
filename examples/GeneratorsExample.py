@@ -64,7 +64,7 @@ def fiboSeq():
         yield seq[required]
 
 def GenSendGet(v, gen):
-    val = fiboseq.send(v)
+    val = gen.send(v)
     next(gen)
     return val
 
